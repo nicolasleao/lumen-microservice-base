@@ -1,0 +1,20 @@
+{
+    "name": "nicolasleao/lumen-microservice-base",
+    "description": "Extendable Laravel/Lumen Classes that implement CRUD operations, ordering, filtering and validation using Service and Repository patterns",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nicolas Leão",
+            "email": "nicolas@dexworks.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LumenMicroservice\\": "src/"            
+        }
+    },
+    "require": {
+        "laravel/lumen-framework": "^8.2"
+    }
+}
