@@ -314,14 +314,14 @@ When making a request to a listing endpoint, like showAll or search, you can pas
 
 ```GET my-lumen-application.local/articles?orderBy=id,-name```
 
-NOTE: adding the character '-' before the field name, will cuase decrescent ordering, so<br>
+NOTE: adding the character '-' before the field name, will cause decrescent ordering, so<br>
 ```?orderBy=-id```<br>
 is equivalent to<br>
 ```ORDER BY id DESC```<br>
 on the database.
 
 #### Filtering
-All requests to listing endpoints, like showAll or search, can be filtered using the following parameter on the querystring:<br>
+All requests to listing endpoints, like showAll or search, can be filtered using the filters parameter on the querystring:<br>
 ```GET my-lumen-application.local/articles?filters=id|>4,likes|<=20,author|Marcus```<br>
 
 This query will return articles where the id is > 4, that have 20 or less likes, and were posted by the author Marcus.
