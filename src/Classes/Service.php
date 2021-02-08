@@ -136,7 +136,7 @@ class Service
      */
     public function store(Request $request) {
         // Validate the request before trying to store data in the database
-        $validator_response = validateInsert($request);
+        $validator_response = $this->validateInsert($request);
 
         // On validation failure, respond with status '302 Bad Request'
         if(!empty($validator_response['errors'])) {
@@ -165,7 +165,7 @@ class Service
      */
     public function update($id, Request $request) {
         // Validate the request before trying to store data in the database
-        $validator_response = validateUpdate($request);
+        $validator_response = $this->validateUpdate($request);
 
         // On validation failure, respond with status '302 Bad Request'
         if(!empty($validator_response['errors'])) {
