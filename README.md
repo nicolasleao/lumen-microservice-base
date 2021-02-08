@@ -37,23 +37,6 @@ multi-tenancy using one schema per tenant on PostgreSQL.
 
 To use this implementation of multi-tenancy in your application, you must first register the Migration Commands in your ```app/Console/Kernel.php``` file:
 
-```
-DB_CONNECTION=tenant
-DB_HOST=localhost
-DB_PORT=5432
-DB_DATABASE=testing
-DB_USERNAME=homestead
-DB_PASSWORD=secret
-
-LANDLORD_DB_CONNECTION=landlord
-LANDLORD_DB_HOST=localhost
-LANDLORD_DB_PORT=5432
-LANDLORD_DB_DATABASE=testing
-LANDLORD_DB_SCHEMA=landlord
-LANDLORD_DB_USERNAME=homestead
-LANDLORD_DB_PASSWORD=secret
-```
-
 ```php
 /**
  * The Artisan commands provided by your application.
@@ -325,5 +308,12 @@ All requests to listing endpoints, like showAll or search, can be filtered using
 ```GET my-lumen-application.local/articles?filters=id|>4,likes|<=20,author|Marcus```<br>
 
 This query will return articles where the id is > 4, that have 20 or less likes, and were posted by the author Marcus.
+
+#### Configuration
+Example .env and /config/database.php files are provided in the ```src/Examples/``` folder
+[.env.example](src/Examples/.env.example)
+[database.php](src/Examples/config/database.php)
+
+
 
 
