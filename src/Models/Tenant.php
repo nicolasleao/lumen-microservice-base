@@ -1,6 +1,6 @@
 <?php
 
-namespace Nicolasleao\BaseService\Models;
+namespace LumenMicroservice\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nicolasleao\BaseService\Classes;
+namespace LumenMicroservice\Classes;
 
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;

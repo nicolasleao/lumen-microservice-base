@@ -1,6 +1,6 @@
 <?php
 
-namespace Nicolasleao\BaseService\Middleware;
+namespace LumenMicroservice\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\DB;

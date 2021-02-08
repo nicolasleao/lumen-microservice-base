@@ -1,8 +1,8 @@
 <?php
 
-namespace Nicolasleao\BaseService\Commands;
+namespace LumenMicroservice\Commands;
 
-use App\Models\Tenant;
+use LumenMicroservice\Models\Tenant;
 use Illuminate\Console\Command;
 
 class TenantsMigrateCommand extends Command
@@ -43,7 +43,7 @@ class TenantsMigrateCommand extends Command
 
         $this->line('');
         $this->line("-----------------------------------------");
-        $this->info("Migrating Tenant #{$tenant->id} ({$tenant->name})");
+        $this->info("Migrating Tenant #{$tenant->id} ({$tenant->domain})");
         $this->line("-----------------------------------------");
 
         $options = ['--force' => true];

@@ -1,8 +1,8 @@
 <?php
 
-namespace Nicolasleao\BaseService\Commands;
+namespace LumenMicroservice\Commands;
 
-use App\Models\Tenant;
+use LumenMicroservice\Models\Tenant;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -39,7 +39,7 @@ class LandlordMigrateCommand extends Command
         DB::statement('CREATE SCHEMA IF NOT EXISTS ' . env('LANDLORD_DB_SCHEMA', 'landlord') . ';');
         DB::statement('SET search_path TO ' . env('LANDLORD_DB_SCHEMA', 'landlord'));
         
-        $options = ['--path' => "database/migrations/landlord", "--database" => "landlord", "--force" => true];
+        $options = ['--path' => "vendor/nicolasleao/lumen-microservice-base/Migrations", "--database" => "landlord", "--force" => true];
 
         if ($this->option('seed')) {
             $options['--seed'] = true;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nicolasleao\BaseService\Classes;
+namespace LumenMicroservice\Classes;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -186,7 +186,7 @@ class Service
     }
 
     /**
-     * Call the repository destroy() method, treating any QueryExceptions in the process.
+     * Call the repository delete() method, treating any QueryExceptions in the process.
      * @param string $id
      * @return string (json)
      */

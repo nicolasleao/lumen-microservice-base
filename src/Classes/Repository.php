@@ -1,6 +1,6 @@
 <?php
 
-namespace Nicolasleao\BaseService\Classes;
+namespace LumenMicroservice\Classes;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
@@ -47,9 +47,7 @@ class Repository
      */
     public function findAll(array $orderBy, array $filters) {
         $results = $this->model::query();
-
         $results = $this->applyOrdersAndFilters($results, $orderBy, $filters);
-
         return $results->paginate()->toArray();
     }
 
