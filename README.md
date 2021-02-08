@@ -1,4 +1,4 @@
-# Laravel/Lumen-framework microservice base
+# laravel/lumen microservice base
 
 This project includes extendable classes that implement Multi-tenancy, CRUD operations, ordering, filtering and validation using the Service and Repository patterns
 
@@ -38,15 +38,28 @@ multi-tenancy using one schema per tenant on PostgreSQL.
 To use this implementation of multi-tenancy in your application, you must first register the Migration Commands in your ```app/Console/Kernel.php``` file:
 
 ```php
-/**
- * The Artisan commands provided by your application.
- *
- * @var array
- */
-protected $commands = [
-    LumenMicroservice\Commands\LandlordMigrateCommand::class,
-    LumenMicroservice\Commands\TenantsMigrateCommand::class,
-];
+<?php
+
+namespace App\Console;
+
+use LumenMicroservice\Commands\LandlordMigrateCommand;
+use LumenMicroservice\Commands\TenantsMigrateCommand;
+use Illuminate\Console\Scheduling\Schedule;
+use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+
+class Kernel extends ConsoleKernel
+{
+    /**
+     * The Artisan commands provided by your application.
+     *
+     * @var array
+     */
+    protected $commands = [
+        LandlordMigrateCommand::class,
+        TenantsMigrateCommand::class,
+    ];
+    //...
+}
 ```
 
 Then, you'll need to run the initial migrations for the landlord schema, using:
@@ -185,6 +198,7 @@ The anatomy of a service is as follows (note the validateInsert() and validateUp
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use LumenMicroservice\Classes\Service;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\ArticleRepository;
@@ -201,25 +215,29 @@ class ArticleService extends Service
 
     //// THESE VALIDATION METHODS ARE OPTIONAL
     protected function validateInsert(Request $request) {
-        $validator = Validator::make($request, [
+        $json_body = json_decode($request->getContent(), true);
+
+        $validator = Validator::make($json_body, [
             'title'=>'required'
             'author'=>'required'
             'likes'=>'numeric'
         ]);
 
-        if($validator->errors()) {
-            return $validator->errors();
+        if(!empty($validator->errors())) {
+            return $validator->errors()->all();
         }
         return [];
     }
 
     protected function validateUpdate(Request $request) {
-        $validator = Validator::make($request, [
+        $json_body = json_decode($request->getContent(), true);
+
+        $validator = Validator::make($json_body, [
             'likes'=>'numeric'
         ]);
 
-        if($validator->errors()) {
-            return $validator->errors();
+        if(!empty($validator->errors())) {
+            return $validator->errors()->all();
         }
         return [];
     }
