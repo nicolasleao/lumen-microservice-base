@@ -5,7 +5,7 @@ namespace LumenMicroservice\Middleware;
 use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Tenant;
+use LumenMicroservice\Models\Tenant;
 
 class TenancyMiddleware
 {
