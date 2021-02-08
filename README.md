@@ -310,8 +310,8 @@ All requests to listing endpoints, like showAll or search, can be filtered using
 This query will return articles where the id is > 4, that have 20 or less likes, and were posted by the author Marcus.
 
 #### Configuration
-Example .env and /config/database.php files are provided in the ```src/Examples/``` folder
-[.env.example](src/Examples/.env.example)
+Example .env and /config/database.php files are provided in the ```src/Examples/``` folder<br>
+[.env.example](src/Examples/.env.example)<br>
 [database.php](src/Examples/config/database.php)
 
 
