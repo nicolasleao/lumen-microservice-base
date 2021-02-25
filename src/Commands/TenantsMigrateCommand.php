@@ -2,10 +2,10 @@
 
 namespace LumenMicroservice\Commands;
 
-use LumenMicroservice\Models\Tenant;
+use LumenMicroservice\Models\Domain;
 use Illuminate\Console\Command;
 
-class TenantsMigrateCommand extends Command
+class DomainsMigrateCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -23,18 +23,18 @@ class TenantsMigrateCommand extends Command
     {
         if ($this->argument('tenant')) {
             $this->migrate(
-                Tenant::find($this->argument('tenant'))
+                Domain::find($this->argument('tenant'))
             );
 
         } else {
-            Tenant::all()->each(
+            Domain::all()->each(
                 fn($tenant) => $this->migrate($tenant)
             );
         }
     }
 
     /**
-     * @param \App\Tenant $tenant
+     * @param \App\Domain $tenant
      * @return int
      */
     public function migrate($tenant)
@@ -43,7 +43,7 @@ class TenantsMigrateCommand extends Command
 
         $this->line('');
         $this->line("-----------------------------------------");
-        $this->info("Migrating Tenant #{$tenant->id} ({$tenant->domain})");
+        $this->info("Migrating Domain ({$tenant->domain}) -> schema: ({$tenant->database_schema})");
         $this->line("-----------------------------------------");
 
         $options = ['--force' => true];

@@ -6,9 +6,6 @@ This project includes extendable classes that implement Multi-tenancy, CRUD oper
 Add the following lines to your ```composer.json``` file:
 
 ```json
-"require": {
-    "nicolasleao/lumen-microservice-base": "^1.0.0"
-},
 "repositories": [
     {
         "type": "vcs",
@@ -17,22 +14,24 @@ Add the following lines to your ```composer.json``` file:
 ]
 ```
 
-and run ```composer install``` to install the package from github.
+and run ```composer require nicolasleao/lumen-microservice-base``` to install the most recent version from github.
 
 ## Basic Concepts
 
 #### Multi-tenancy (Optional)
 
-This project provides a Model, 2 Commands, and a Middleware that can be used to implement
+This project provides a Model, 2 Commands, and 2 Middlewares that can be used to implement
 multi-tenancy using one schema per tenant on PostgreSQL.
 
-1. Models/Tenant.php
+1. Models/Domain.php
     - Associates a domain with a schema_name, and is used by the middleware to connect to the correct tenant for the current request.
 2. Middleware/TenancyMiddleware.php
-    - Tries to find a matching Tenant model by the request's domain, and caches the results for one day, to minimize recurrent database queries and increase response time
-3. Commands/LandlordMigrateCommand.php
+    - Tries to find a matching Domain model instance by the request's domain, sets the 'X-Current-Tenant' header and caches the results for one day, to minimize recurrent database queries and increase response time (ideal for an api-gateway or standalone services)
+3. Middleware/ServiceTenancyMiddleware.php
+    - Tries to find a matching Domain model instance by the request's X-Current-Tenant header (Ideal for internal services, called by an api-gateway)
+4. Commands/LandlordMigrateCommand.php
     - Creates the landlord schema and tenants table, called using ```php artisan landlord:migrate``` or ```php artisan landlord:migrate --fresh```
-4. Commands/TenantsMigrateCommand.php
+5. Commands/TenantsMigrateCommand.php
     - Creates a schema for every tenant inserted in the landlord.tenants table, called using ```php artisan tenants:migrate``` or ```php artisan tenants:migrate --fresh```
 
 To use this implementation of multi-tenancy in your application, you must first register the Migration Commands in your ```app/Console/Kernel.php``` file:

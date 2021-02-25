@@ -25,10 +25,6 @@ class LandlordMigrateCommand extends Command
         $this->migrate();
     }
 
-    /**
-     * @param \App\Tenant $tenant
-     * @return int
-     */
     public function migrate()
     {
         $this->line('');
