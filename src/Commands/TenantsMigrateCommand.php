@@ -5,7 +5,7 @@ namespace LumenMicroservice\Commands;
 use LumenMicroservice\Models\Domain;
 use Illuminate\Console\Command;
 
-class DomainsMigrateCommand extends Command
+class TenantsMigrateCommand extends Command
 {
     /**
      * The name and signature of the console command.
