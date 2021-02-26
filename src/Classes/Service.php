@@ -30,7 +30,7 @@ class Service
      * @param Request $request
      * @return array $errors
      */
-    protected function validateInsert(Request $request) {
+    protected function validateInsert($input) {
         return ['errors' => []];
     }
 
@@ -40,7 +40,7 @@ class Service
      * @param Request $request
      * @return array $errors
      */
-    protected function validateUpdate(Request $request) {
+    protected function validateUpdate($input) {
         return ['errors' => []];
     }
 
@@ -135,8 +135,10 @@ class Service
      * @return string (json)
      */
     public function store(Request $request) {
+        $json_body = json_decode($request->getContent(), true);
+
         // Validate the request before trying to store data in the database
-        $validator_response = $this->validateInsert($request);
+        $validator_response = $this->validateInsert($json_body);
 
         // On validation failure, respond with status '302 Bad Request'
         if(!empty($validator_response['errors'])) {
@@ -146,7 +148,7 @@ class Service
             // Try to contact the repository and execute request
             try {
                 return response()->json(
-                    $this->repo->create($request->all())
+                    $this->repo->create($json_body)
                 );
             }
             // Catch any query exceptions and return a JSON formatted response (other exceptions will return text/html)
@@ -164,8 +166,10 @@ class Service
      * @return string (json)
      */
     public function update($id, Request $request) {
+        $json_body = json_decode($request->getContent(), true);
+
         // Validate the request before trying to store data in the database
-        $validator_response = $this->validateUpdate($request);
+        $validator_response = $this->validateUpdate($json_body);
 
         // On validation failure, respond with status '302 Bad Request'
         if(!empty($validator_response['errors'])) {
@@ -175,7 +179,7 @@ class Service
             // Try to contact the repository and execute request
             try {
                 return response()->json(
-                    ['result' => $this->repo->update($id, $request->all())]
+                    ['result' => $this->repo->update($id, $json_body)]
                 );
             }
             // Catch any query exceptions and return a JSON formatted response (other exceptions will return text/html)
