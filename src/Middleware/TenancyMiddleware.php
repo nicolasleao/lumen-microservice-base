@@ -22,7 +22,6 @@ class TenancyMiddleware
         $domain = $request->getHost();
         $cachedSchema = Cache::get($domain);
 
-        $response = $next($request);
         /**
          * If there is a cache entry matching current hostname, 
          * set the current connection schema to that entry.
@@ -30,7 +29,6 @@ class TenancyMiddleware
         if($cachedSchema) {
             config(['database.connections.tenant.schema' => $cachedSchema]);
             DB::statement('SET search_path TO ' . $cachedSchema);
-            $response->header('X-Current-Tenant', $cachedSchema);
         }
         /**
          * Otherwise, query the database to find the matching database_schema
@@ -42,9 +40,11 @@ class TenancyMiddleware
             config(['database.connections.tenant.schema' => $tenant->database_schema]);
             DB::statement('SET search_path TO ' . $tenant->database_schema);
             Cache::put($domain, $tenant->database_schema, $seconds=(24 * 60 * 60));
-            $response->header('X-Current-Tenant', $tenant->database_schema);
+            $cachedSchema = $tenant->database_schema;
         }
 
+        $response = $next($request);
+        $response->header('X-Current-Tenant', $cachedSchema);
         return $response;
     }
 }
