@@ -5,10 +5,12 @@ namespace LumenMicroservice\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use LumenMicroservice\Traits\ConnectsToDatabase;
 
-class Domain extends Model
+class ApiKey extends BaseModel
 {
     use SoftDeletes;
+    use ConnectsToDatabase;
     
     /**
      * The connection name for the model.
@@ -16,21 +18,20 @@ class Domain extends Model
      * @var string|null
      */
     protected $connection = 'landlord';
-    protected $table = 'tenants';
+    protected $table = 'api_keys';
 
     protected $fillable = [
         'store_id',
-        'domain',
+        'user_id',
+        'role',
+        'is_default',
         'database_schema',
+        'database_host',
+        'database_port',
+        'database_user',
+        'database_pass',
+        'database_db',
     ];
-
-    public function use() {
-        config(['database.connections.tenant.schema' => $this->database_schema]);
-        DB::purge('tenant');
-        DB::reconnect('tenant');
-        DB::statement('CREATE SCHEMA IF NOT EXISTS ' . $this->database_schema . ';');
-        DB::statement('SET search_path TO ' . $this->database_schema);
-    }
 
     protected static function boot()
     {
@@ -39,11 +40,12 @@ class Domain extends Model
         static::creating(function ($model)
         {
             /**
-             * Generate a schema name if it doesn't exist
-             * Output example: 16106692190b125a028c790a9e7af279a88d0de30a
+             * Generate random key and a schema name if it wasn't provided
+             * Output example: tenant1610669219028c790a9e7af279a88d0de30a
              */
+
             if(!$model->database_schema) {
-                $generatedSchemaName = 'tenant' . time() . md5(rand());
+                $generatedSchemaName = 'tenant' . time() . substr(md5(rand()), 0, 25);
                 $model->database_schema = $generatedSchemaName;
             }
         });

@@ -6,9 +6,12 @@ use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use LumenMicroservice\Models\Domain;
+use LumenMicroservice\Traits\ConnectsToDatabase;
 
 class ServiceTenancyMiddleware
 {
+    use ConnectsToDatabase;
+
     /**
      * Handle an incoming request.
      *
@@ -18,11 +21,22 @@ class ServiceTenancyMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // Get correct database schema from request header
-        $schema_name = $request->header('X-Current-Tenant');
+        // Get correct database connection information from the request header
+        $currentTenant = json_decode($request->header('X-Current-Tenant'));
 
-        config(['database.connections.tenant.schema' => $schema_name]);
-        DB::statement('SET search_path TO ' . $schema_name);
+        if(!$currentTenant) {
+            return response()->json([
+                'error' => 'Invalid or null X-Current-Tenant request header'
+            ], 301);
+        }
+        else {
+            if($currentTenant['database_host']) {
+                $this->useConnection($currentTenant);
+            }
+            else {
+                $this->useSchema($currentTenant['database_schema']);
+            }
+        }
 
         return $next($request);
     }

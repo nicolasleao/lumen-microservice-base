@@ -5,10 +5,14 @@ namespace LumenMicroservice\Middleware;
 use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use LumenMicroservice\Models\Domain;
+use LumenMicroservice\Models\ApiKey;
+use LumenMicroservice\Classes\CacheManager;
+use LumenMicroservice\Traits\ConnectsToDatabase;
 
 class TenancyMiddleware
 {
+    use ConnectsToDatabase;
+    
     /**
      * Handle an incoming request.
      *
@@ -18,33 +22,25 @@ class TenancyMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // Try to get cached schema for current hostname
-        $domain = $request->getHost();
-        $cachedSchema = Cache::get($domain);
-
-        /**
-         * If there is a cache entry matching current hostname, 
-         * set the current connection schema to that entry.
-         */
-        if($cachedSchema) {
-            config(['database.connections.tenant.schema' => $cachedSchema]);
-            DB::statement('SET search_path TO ' . $cachedSchema);
+        $apiKey = $request->header('x-api-key');
+        
+        $currentTenant = CacheManager::getCurrentTenant($apikey);
+        if(!$currentTenant) {
+            return response()->json([
+                'error' => 'The API key is invalid'
+            ], 301);
         }
-        /**
-         * Otherwise, query the database to find the matching database_schema
-         * for current domain, and create a new cache entry with the domain as the key
-         * and database_schema as the value.
-         */
         else {
-            $tenant = Domain::where('domain', $domain)->firstOrFail();
-            config(['database.connections.tenant.schema' => $tenant->database_schema]);
-            DB::statement('SET search_path TO ' . $tenant->database_schema);
-            Cache::put($domain, $tenant->database_schema, $seconds=(24 * 60 * 60));
-            $cachedSchema = $tenant->database_schema;
+            if($currentTenant['database_host']) {
+                $this->useConnection($currentTenant);
+            }
+            else {
+                $this->useSchema($currentTenant['database_schema']);
+            }
         }
 
         $response = $next($request);
-        $response->header('X-Current-Tenant', $cachedSchema);
+        $response->header('X-Current-Tenant', json_encode($currentTenant));
         return $response;
     }
 }
