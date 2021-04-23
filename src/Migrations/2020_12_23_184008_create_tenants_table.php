@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiKeysTable extends Migration
+class CreateTenantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateApiKeysTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_keys', function (Blueprint $table) {
+        Schema::create('tenants', function (Blueprint $table) {
             $table->string('id');
-            $table->string('store_id')->nullable();
-            $table->string('tenant_id');
-            $table->string('user_id')->nullable();
-            $table->string('role')->default("visitor");
-            $table->boolean('is_default')->default(false);
+            $table->string('name');
+            $table->string('database_schema')->nullable();
+            $table->string('database_host')->nullable();
+            $table->string('database_port')->nullable();
+            $table->string('database_uid')->nullable();
+            $table->string('database_pass')->nullable();
+            $table->string('database_db')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
