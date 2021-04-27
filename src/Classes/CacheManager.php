@@ -45,7 +45,7 @@ class CacheManager {
             else {
             	try {
 	                $key = ApiKey::where('key', $apiKey)->with('tenant')->firstOrFail();
-                    $tenant = $key->tenant()->first();
+                    $tenant = $key->tenant;
 	                if($tenant->database_host) {
 	                	$this->setCacheConnection($apiKey, $tenant);
 	                }
