@@ -22,5 +22,30 @@ class BaseModel extends Model
              */
             $model->id = UUID::v4();
         });
+
+        static::deleting(function($model) {
+            // CASCADE SOFT DELETE
+            if (isset($model->cascadeDelete)) {
+                collect($model->cascadeDelete)->each(function ($class, $method) use ($model) {
+                    if (method_exists($model, $method)) {
+                        collect($model->$method($class)->get())->each(function ($model) {
+                            $model->delete();
+                        });
+                        $model->$method($class)->delete();
+                    }
+                });
+            }
+            // CASCADE PERMANENTLY DELETE
+            if (isset($model->cascadeForceDelete)) {
+                collect($model->cascadeForceDelete)->each(function ($class, $method) use ($model) {
+                    if (method_exists($model, $method)) {
+                        collect($model->$method($class)->get())->each(function ($model) {
+                            $model->forceDelete();
+                        });
+                        $model->$method($class)->forceDelete();
+                    }
+                });
+            }
+        });
     }
 }
