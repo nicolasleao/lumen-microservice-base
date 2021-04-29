@@ -35,7 +35,7 @@ class LandlordMigrateCommand extends Command
         DB::statement('CREATE SCHEMA IF NOT EXISTS ' . env('LANDLORD_DB_SCHEMA', 'landlord') . ';');
         DB::statement('SET search_path TO ' . env('LANDLORD_DB_SCHEMA', 'landlord'));
         
-        $options = ['--path' => "vendor/nicolasleao/lumen-microservice-base/Migrations", "--database" => "landlord", "--force" => true];
+        $options = ['--path' => "vendor/nicolasleao/lumen-microservice-base/src/Migrations", "--database" => "landlord", "--force" => true];
 
         if ($this->option('seed')) {
             $options['--seed'] = true;
