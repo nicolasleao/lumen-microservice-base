@@ -11,7 +11,7 @@ trait ConnectsToDatabase
      *
      * @param  string $database_schema
      */
-    private function useSchema($database_schema = null) {
+    public function useSchema($database_schema = null) {
         config(['database.connections.tenant.schema' => $database_schema]);
         DB::purge('tenant');
         DB::reconnect('tenant');
@@ -24,7 +24,7 @@ trait ConnectsToDatabase
      *
      * @param  string $database_schema
      */
-    private function useConnection($currentTenant = null) {
+    public function useConnection($currentTenant = null) {
         config(['database.connections.tenant.host' => $currentTenant['database_host']]);
         config(['database.connections.tenant.port' => $currentTenant['database_port']]);
         config(['database.connections.tenant.database' => $currentTenant['database_db']]);

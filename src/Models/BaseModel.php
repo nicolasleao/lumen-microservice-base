@@ -11,6 +11,13 @@ class BaseModel extends Model
     use SoftDeletes;    
     public $timestamps = true;
 
+    /*
+     * Ensure laravel doesn't cast UUID key to integer
+     * by explicitely defining the $keyType property as string
+     */
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected static function boot()
     {
         parent::boot();

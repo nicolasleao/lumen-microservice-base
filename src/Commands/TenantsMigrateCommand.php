@@ -39,7 +39,11 @@ class TenantsMigrateCommand extends Command
      */
     public function migrate($tenant)
     {
-        $tenant->use();
+    	if($tenant->database_host) {
+        	$tenant->useConnection($tenant->toArray());
+    	} else {
+        	$tenant->useSchema($tenant->database_schema);
+    	}
 
         $this->line('');
         $this->line("-----------------------------------------");
