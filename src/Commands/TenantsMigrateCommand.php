@@ -12,7 +12,7 @@ class TenantsMigrateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tenants:migrate {tenant?} {--fresh} {--seed} {--landlord}';
+    protected $signature = 'tenants:migrate {tenant?} {--seed} {--landlord}';
 
     /**
      * Execute the console command.
@@ -52,9 +52,6 @@ class TenantsMigrateCommand extends Command
             $options['--seed'] = true;
         }
 
-        $this->call(
-            $this->option('fresh') ? 'migrate:fresh' : 'migrate',
-            $options
-        );
+        $this->call('migrate', $options);
     }
 }

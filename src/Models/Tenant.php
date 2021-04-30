@@ -19,8 +19,7 @@ class Tenant extends BaseModel
     protected $table = 'tenants';
 
     protected $fillable = [
-        'id'
-        'name'
+        'name',
         'database_schema',
         'database_host',
         'database_port',

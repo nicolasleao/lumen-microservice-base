@@ -13,7 +13,7 @@ class LandlordMigrateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'landlord:migrate {--fresh} {--seed}';
+    protected $signature = 'landlord:migrate {--seed}';
 
     /**
      * Execute the console command.
@@ -43,9 +43,6 @@ class LandlordMigrateCommand extends Command
             $options['--seed'] = true;
         }
 
-        $this->call(
-            $this->option('fresh') ? 'migrate:fresh' : 'migrate',
-            $options
-        );
+        $this->call('migrate', $options);
     }
 }
