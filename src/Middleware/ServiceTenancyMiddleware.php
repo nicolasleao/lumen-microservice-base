@@ -30,7 +30,7 @@ class ServiceTenancyMiddleware
             ], 301);
         }
         else {
-            if($currentTenant['database_host']) {
+            if(array_key_exists('database_host', $currentTenant)) {
                 $this->useConnection($currentTenant);
             }
             else {
