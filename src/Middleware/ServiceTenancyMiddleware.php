@@ -22,7 +22,7 @@ class ServiceTenancyMiddleware
     public function handle($request, Closure $next)
     {
         // Get correct database connection information from the request header
-        $currentTenant = json_decode($request->header('X-Current-Tenant'));
+        $currentTenant = json_decode($request->header('X-Current-Tenant'), true);
 
         if(!$currentTenant) {
             return response()->json([
