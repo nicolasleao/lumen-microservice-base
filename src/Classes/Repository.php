@@ -59,11 +59,11 @@ class Repository
      * @return array
      */
     public function search(string $terms, array $fields, array $orderBy, array $filters) {
-        $results = $this->model::where($fields[0], 'like', '%' . $terms . '%');
+        $results = $this->model::where($fields[0], 'like', '%' . urldecode($terms) . '%');
 
         if(count($fields) > 1) {
             foreach($fields as $field) {
-                $results->orWhere($field, 'like', '%' . $terms . '%');
+                $results->orWhere($field, 'like', '%' . urldecode($terms) . '%');
             }
         }
 
@@ -79,8 +79,8 @@ class Repository
      * @return object
      */
     public function update($id, array $data) {
-        $this->model::where('id', $id)->update($data);
-        return $this->model::findOrFail($id);
+        $this->model::findOrFail($id)->update($data);
+        return $this->model::find($id);
     }
 
     /**
@@ -144,7 +144,7 @@ class Repository
              * Input example: &filters=products.created_at|>2021-01-12T20:42:47.000000Z,products.price|>5000
              */ 
             try {
-                $key_value = explode('|', $filter);
+                $key_value = explode('=', $filter);
 
                 // Only try to do the operations a key and a value were provided
                 if(count($key_value) > 1) {
@@ -153,35 +153,26 @@ class Repository
                         $results = $results->withTrashed();
                     }
 
-                    // Check for '<=' or '>=' operators before the value, and apply that to the query
-                    if(strstr($key_value[1], '<=') || strstr($key_value[1], '>=')) {
-                        $value = substr($key_value[1], 2);
-
-                        $operator = substr($key_value[1], 0, 2);
-                        $results = $results->where($key_value[0], $operator, $value);
+                    // Check for '<=' or '>=' operators, and apply that to the query
+                    if(strstr($key_value[0], '<') || strstr($key_value[0], '>')) {
+                        $key = substr($key_value[0], 0, -1);
+                        $value = $key_value[1];
+                        $operator = substr($key_value[0], -1) . "=";
+                        $results = $results->where($key, $operator, $value);
                     }
                     /**
                      * If those operators were not found, check for '<>' operator before the value
                      * and apply that to the query
                      */
-                    else if(strstr($key_value[1], '!')) {
-                        $value = substr($key_value[1], 1);
+                    else if(strstr($key_value[0], '!')) {
+                        $key = substr($key_value[0], 0, -1);
+                        $value = $key_value[1];
                         if($value === 'null') {
                             $results = $results->whereNotNull($key_value[0]);
                         }
                         else {
                             $results = $results->where($key_value[0], '<>', $key_value[1]);
                         }
-                    }
-                    /**
-                     * If that operator was not found, check for '<' or '>' operators before the value
-                     * and apply that to the query
-                     */
-                    else if(strstr($key_value[1], '<') || strstr($key_value[1], '>')) {
-                        $value = substr($key_value[1], 1);
-                        $operator = substr($key_value[1], 0, 1);
-
-                        $results = $results->where($key_value[0], $operator, $value);
                     }
                     // If none of these operators were found, use the '=' operator.
                     else {
@@ -202,4 +193,3 @@ class Repository
         return $results;
     }
 }
-
