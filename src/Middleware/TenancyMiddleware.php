@@ -24,7 +24,7 @@ class TenancyMiddleware
     {
         $apiKey = $request->header('x-api-key');
         
-        $currentTenant = CacheManager::getCurrentTenant($apikey);
+        $currentTenant = CacheManager::getCurrentTenant($apiKey);
         if(!$currentTenant) {
             return response()->json([
                 'error' => 'The API key is invalid'
