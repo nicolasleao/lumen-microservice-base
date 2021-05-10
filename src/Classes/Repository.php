@@ -79,8 +79,8 @@ class Repository
      * @return object
      */
     public function update($id, array $data) {
-        $this->model::where('id', $id)->update($data);
-        return $this->model::findOrFail($id);
+        $this->model::findOrFail($id)->update($data);
+        return $this->model::find($id);
     }
 
     /**
