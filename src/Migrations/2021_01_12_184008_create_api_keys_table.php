@@ -14,7 +14,7 @@ class CreateApiKeysTable extends Migration
     public function up()
     {
         Schema::create('api_keys', function (Blueprint $table) {
-            $table->string('id');
+            $table->string('id')->primary();
             $table->string('store_id')->nullable();
             $table->string('tenant_id');
             $table->string('user_id')->nullable();
