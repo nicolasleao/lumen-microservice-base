@@ -4,6 +4,7 @@ namespace LumenMicroservice\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use LumenMicroservice\Classes\UUID;
 
 class BaseModel extends Model
@@ -18,6 +19,8 @@ class BaseModel extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $hasSlugField = false;
+
     protected static function boot()
     {
         parent::boot();
@@ -28,6 +31,14 @@ class BaseModel extends Model
              * Generate random UUID for sharding
              */
             $model->id = UUID::v4();
+        });
+
+        static::saving(function ($model)
+        {
+            if($model->hasSlugField) {
+                $generated_slug = Str::slug($model->name, '-');
+                $model->slug = $generated_slug;
+            }
         });
 
         static::deleting(function($model) {
