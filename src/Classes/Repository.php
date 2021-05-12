@@ -63,7 +63,7 @@ class Repository
 
         if(count($fields) > 1) {
             foreach($fields as $field) {
-                $results->orWhere($field, 'like', '%' . urldecode($terms) . '%');
+                $results->orWhere($field, 'like', '%' . strtolower(urldecode($terms)) . '%');
             }
         }
 
