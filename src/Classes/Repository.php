@@ -32,12 +32,21 @@ class Repository
     }
 
     /**
-     * SELECT a record on the database or returns an error
+     * SELECT a record on the database or return an error
      * @param int $id
      * @return array
      */
     public function findOne($id) {
         return $this->model::findOrFail($id)->toArray();   
+    }
+
+    /**
+     * SELECT a record on the database by specific field or return an error
+     * @param int $id
+     * @return array
+     */
+    public function findOneBy($field, $value) {
+        return $this->model::where($field, $value)->first()->toArray();
     }
 
     /**

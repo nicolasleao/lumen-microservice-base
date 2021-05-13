@@ -44,6 +44,20 @@ class Service
         return ['errors' => []];
     }
 
+    protected function hasInvalidInput($input, $validations) : array|bool {
+        $validator = Validator::make($input, $fields);
+
+        if($validator->fails()) {
+            return [
+                'message' => 'Validation errors',
+                'errors' =>  $validator->errors(), 
+                'status' => false
+            ];
+        }
+
+        return false;
+    }
+
     /**
      * Create $orderBy array from querystring and pass it to the repository findAll() method
      * treating any QueryExceptions in the process.
