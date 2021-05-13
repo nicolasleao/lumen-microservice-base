@@ -46,7 +46,8 @@ class Repository
      * @return array
      */
     public function findOneBy($field, $value) {
-        return $this->model::where($field, $value)->first()->toArray();
+        $result = $this->model::where($field, $value)->first();
+        return $result ? $result->toArray() : [];
     }
 
     /**
