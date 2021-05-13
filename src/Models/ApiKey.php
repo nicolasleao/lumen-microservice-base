@@ -3,7 +3,6 @@
 namespace LumenMicroservice\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 use LumenMicroservice\Traits\ConnectsToDatabase;
 
 class ApiKey extends BaseModel

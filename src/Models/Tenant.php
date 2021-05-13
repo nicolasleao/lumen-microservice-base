@@ -3,7 +3,6 @@
 namespace LumenMicroservice\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 use LumenMicroservice\Traits\ConnectsToDatabase;
 
 class Tenant extends BaseModel
@@ -19,6 +18,7 @@ class Tenant extends BaseModel
     protected $table = 'tenants';
 
     protected $fillable = [
+        'user_id',
         'name',
         'database_schema',
         'database_host',
