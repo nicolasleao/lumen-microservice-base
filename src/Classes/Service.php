@@ -45,7 +45,7 @@ class Service
     }
 
     protected function hasInvalidInput($input, $validations) : array|bool {
-        $validator = Validator::make($input, $fields);
+        $validator = Validator::make($input, $validations);
 
         if($validator->fails()) {
             return [
